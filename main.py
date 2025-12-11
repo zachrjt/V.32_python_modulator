@@ -1,3 +1,4 @@
+# ZT 2025
 import numpy as np
 import scipy as sp
 from random import randint
@@ -367,23 +368,22 @@ class trellis_coded_modulator:
 
         # Plot the shaped data and where optimal sampling would be
         # fig, axs = plt.subplots(2)
-        # axs[0].plot(i_shaped, '.-')
-        # axs[1].plot(q_shaped, '.-')
+        # axs[0].plot(baseband_shaped_noise.real, '-', label="I")
+        # axs[1].plot(baseband_shaped_noise.imag, '-', label="Q")
+        # axs[0].set_title("Pulse Shaped I Samples with Noise Added")
+        # axs[0].set_ylabel("I")
+        # axs[1].set_ylabel("Q")
+        # axs[0].set_title("Pulse Shaped Q Samples with Noise Added")
+        # axs[0].set_xlabel("Sample")
+        # axs[1].set_xlabel("Sample")
         # axs[0].grid(True)
         # axs[1].grid(True)
 
         # for i in range(len(tx_symbolData)):
-        #     axs[0].plot([i*OVER_SAMPLE_FACTOR+delay_offset,i*OVER_SAMPLE_FACTOR+delay_offset], [0, i_shaped[i*OVER_SAMPLE_FACTOR+delay_offset]])
-        #     axs[1].plot([i*OVER_SAMPLE_FACTOR+delay_offset,i*OVER_SAMPLE_FACTOR+delay_offset], [0, q_shaped[i*OVER_SAMPLE_FACTOR+delay_offset]])
+        #     axs[0].plot([i*OVER_SAMPLE_FACTOR+delay_offset,i*OVER_SAMPLE_FACTOR+delay_offset], [0, i_shaped[i*OVER_SAMPLE_FACTOR+delay_offset]], c="red")
+        #     axs[1].plot([i*OVER_SAMPLE_FACTOR+delay_offset,i*OVER_SAMPLE_FACTOR+delay_offset], [0, q_shaped[i*OVER_SAMPLE_FACTOR+delay_offset]], c="red")
         # plt.show()
         # plt.grid(True)
-        # plt.show()
-
-        # plt.scatter(baseband_sampled.real, baseband_sampled.imag, c='blue')
-        # if applyNoise:
-        #     plt.scatter(baseband_sampled_noise.real, baseband_sampled_noise.imag, c='red')
-        # plt.grid(True)
-        # plt.show()
         
         if applyNoise:
             return baseband_sampled_noise
@@ -617,7 +617,8 @@ class trellis_coded_modulator:
 
 
 def main():
-    
+
+    SNR = 18
     coder = trellis_coded_modulator()
     
     randData = []
@@ -635,7 +636,7 @@ def main():
     
     # Pad, then oversample the I, Q data performing pulse shaping 
     # Then add noise and downsample the data for the Rx
-    tx_sampledData = coder.sample(tx_symbolData, True, 18)
+    tx_sampledData = coder.sample(tx_symbolData, True, SNR)
 
     # Decode the rx symbol stream using Viterbi algorithm
     rxSymbols, rxData = coder.decode(tx_sampledData, True, True)
